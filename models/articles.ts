@@ -22,9 +22,12 @@ export const add = async (article: any) => {
   parm = parm.slice(0, -1);
   let sql = `Insert INTO articles (${keys}) VALUES (${parm})`;
   try {
-    await db.run_insert(sql, values);
+    console.log(`Executing SQL query: ${sql} with values: ${values}`);
+    await db.run_add(sql, values);
+    console.log(`Insertion successful`);
     return { status: 201 };
   } catch (err: any) {
+    console.error(`Error inserting article: ${err}`);
     return err;
   }
 }
@@ -46,4 +49,11 @@ export const update = async (id: number, article: any) => {
   } catch (err: any) {
     return err;
   }
+}
+
+export const deleteById = async (id: any) => {
+  let query = 'DELETE FROM articles WHERE id = ?';
+  let value = [id];
+  let data = await db.run_query(query, value);
+  return data;
 }

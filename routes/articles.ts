@@ -23,12 +23,7 @@ const getAll = async (ctx: RouterContext, next: any) => {
   await next();
 };
 const getById = async (ctx: RouterContext, next: any) => {
-  // let id = +ctx.params.id // +variables change to number only need to add + 
-  // if ((id < articles.length + 1) && (id > 0)) { //index start from 0, length start from 1
-  //   ctx.body = articles[id - 1];
-  // } else {
-  //   ctx.status = 404;
-  // }
+
   let id = ctx.params.id
   let article = await model.getID(id);
   if (article.length) {
@@ -39,36 +34,20 @@ const getById = async (ctx: RouterContext, next: any) => {
   await next();
 };
 const createArticle = async (ctx: RouterContext, next: any) => {
-  // let { title, fullText } = ctx.request.body;
-  // let newArticle = { title: title, fullText: fullText };
-  // articles.push(newArticle);
-  // ctx.status = 201;
-  // ctx.body = newArticle;
   const body = ctx.request.body;
-  let result = await model.add(body);
-  if (result.status == 201) {
+  try {
+    const result = await model.add(body);
     ctx.status = 201;
-    ctx.body = body;
-  } else {
+    ctx.body = { message: 'Article created successfully', article: result };
+  } catch (err: any) {
     ctx.status = 500;
-    ctx.body = { err: "insert data failed" }
+    ctx.body = { error: 'Failed to create article', details: err };
   }
   await next();
 };
 
 const updateArticle = async (ctx: RouterContext, next: any) => {
-  // let { title, fullText } = ctx.request.body;
-  // let newArticle2 = { title: title, fullText: fullText };
-  // let id = +ctx.params.id // +variables change to number only need to add + 
-  // if ((id < articles.length + 1) && (id > 0)) { //index start from 0, length start from 1
-  //   articles[id - 1].title = title;
-  //   articles[id - 1].fullText = fullText;
-  //   ctx.body = newArticle2;
-  //   ctx.status = 200;
-  //   ctx.body = articles;
-  // } else {
-  //   ctx.status = 404;
-  // }
+  
   let id = ctx.params.id
   const body = ctx.request.body;
   let result = await model.update(id, body);
@@ -77,18 +56,30 @@ const updateArticle = async (ctx: RouterContext, next: any) => {
     ctx.body = body;
   } else {
     ctx.status = 500;
-    ctx.body = { err: "insert data failed" }
+    ctx.body = { err: "insert data failed" };
   }
   await next();
 };
+// const deleteArticle = async (ctx: RouterContext, next: any) => {
+//   let id = +ctx.params.id // +variables change to number only need to add + 
+//   if ((id < articles.length + 1) && (id > 0)) { //index start from 0, length start from 1
+//     articles.splice(id - 1, 1);
+//     ctx.body = articles;
+//     ctx.status = 200;
+//   } else {
+//     ctx.status = 404;
+//   }
+//   await next();
+// };
 const deleteArticle = async (ctx: RouterContext, next: any) => {
-  let id = +ctx.params.id // +variables change to number only need to add + 
-  if ((id < articles.length + 1) && (id > 0)) { //index start from 0, length start from 1
-    articles.splice(id - 1, 1);
-    ctx.body = articles;
-    ctx.status = 200;
-  } else {
-    ctx.status = 404;
+  let id = ctx.params.id;
+  try {
+    await model.deleteById(id);
+    ctx.status = 200;0 // No Content
+    ctx.body = { message: 'Article deleted successfully' };
+  } catch (err: any) {
+    ctx.status = 500;
+    ctx.body = err;
   }
   await next();
 };
@@ -96,7 +87,7 @@ const deleteArticle = async (ctx: RouterContext, next: any) => {
 router.get('/', getAll);
 router.post('/', basicAuth, bodyParser(), validateArticle, createArticle);
 router.get('/:id([0-9]{1,})', getById); //regular expression needs to be in a ()
-router.put('/:id([0-9]{1,})', bodyParser(), updateArticle);
-router.del('/:id([0-9]{1,})', basicAuth, bodyParser(), deleteArticle);
+router.put('/:id([0-9]{1,})', bodyParser(),basicAuth, updateArticle);
+router.del('/:id([0-9]{1,})', basicAuth, deleteArticle);
 
 export { router };

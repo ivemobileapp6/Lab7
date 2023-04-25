@@ -32,3 +32,27 @@ export const run_update = async (sql, values) => {
     throw 'Update Data Error'
   }
 }
+
+export const run_add = async (sql: string, values: any[]) => {
+  const sequelize = new Sequelize(`postgres://${config.user}:${config.password}@${config.host}:${config.port}/${config.database}`);
+  try {
+    await sequelize.authenticate();
+    const result = await sequelize.transaction(async (t) => {
+      const [insertResult] = await sequelize.query(
+        sql,
+        {
+          replacements: values,
+          type: QueryTypes.INSERT,
+          transaction: t,
+        }
+      );
+      return { id: insertResult.id };
+    });
+    await sequelize.close();
+    return { status: 201, id: result.id };
+  } catch (error) {
+    console.error(error);
+    await sequelize.close();
+    throw 'Insert Data Error';
+  }
+};
