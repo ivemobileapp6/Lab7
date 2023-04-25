@@ -1,13 +1,13 @@
 import { Validator, ValidationError } from 'jsonschema';
 import { RouterContext } from 'koa-router';
-import { article } from '../schema/article.schema';
+import { article } from '../schemas/articles.schema'; 
 
 const v = new Validator()
 
 export const validateArticle = async (ctx: RouterContext, next: any) => {
- const validationOptions = {
- throwError: true,
- allowUnknownAttributes: false
+ const validationOptions = { 
+ throwError: true, //if throw error = false is useless because it will still run
+ allowUnknownAttributes: false // does not allow admin: "xxx"
  }
  const body = ctx.request.body;
  try {

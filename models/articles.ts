@@ -29,19 +29,19 @@ export const add = async (article: any) => {
   }
 }
 
-export const update = async (id: any, article: any) => {
-  let query = 'select * from articles where ID = ?';
-  let value = [id]
-  let data = await db.run_query(query, value);
+export const update = async (id: number, article: any) => {
   let keys = Object.keys(article);
   let values = Object.values(article);
-  let key = keys.join(',');
-  let parm = '';
-  for (let i: number = 0; i < values.length; i++) { parm += '?,' }
-  parm = parm.slice(0, -1);
-  let sql = `Insert INTO articles (${keys}) VALUES (${parm})`;
+  // let key = keys.join(',');
+  // let parm = '';
+  let updates = '';
+  for (let i: number = 0; i < values.length; i++) { updates+= `${keys[i]}= 
+ ?,`}
+  updates = updates.slice(0, -1);
+  let sql = `UPDATE articles SET ${updates} WHERE id = ${id}`;
+  console.log(sql);
   try {
-    await db.run_insert(sql, values);
+    await db.run_update(sql, values);
     return { status: 201 };
   } catch (err: any) {
     return err;

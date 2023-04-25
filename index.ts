@@ -3,8 +3,11 @@ import Router, {RouterContext} from "koa-router";
 import logger from "koa-logger";
 import json from "koa-json";
 import passport from 'koa-passport';
+import cors from '@koa/cors'
 import {router as articles} from "./routes/articles";
 import {router as users} from "./routes/special"
+
+import serve from 'koa-static-folder';
 
 const app: Koa= new Koa();
 // const router: Router = new Router();
@@ -17,8 +20,9 @@ const app: Koa= new Koa();
 // router.get('/api/v1', welcomeAPI); // version 1,2,3 if keep updating, should keep all older 
 
 // advantage is if I found a bug in a certain endpoint, i can change it in a certain function, so no need to find from a whole page
-
+app.use(cors());
 app.use(logger());
+app.use(serve('./docs'));
 app.use(json());
 app.use(passport.initialize());
 app.use(articles.routes()); //where does routes come from, all router.xxx yyy will be called

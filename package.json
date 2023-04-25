@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@koa/cors": "^4.0.0",
     "@types/koa": "^2.13.5",
     "@types/koa-bodyparser": "^4.3.10",
     "@types/koa-json": "^2.0.20",
@@ -14,6 +15,7 @@
     "koa-logger": "^3.2.1",
     "koa-passport": "^6.0.0",
     "koa-router": "^12.0.0",
+    "koa-static-folder": "^0.1.6",
     "passport-http": "^0.3.0",
     "pg": "^8.9.0",
     "pg-hstore": "^2.3.4",

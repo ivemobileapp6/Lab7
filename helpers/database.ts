@@ -17,19 +17,18 @@ export const run_query = async (query, values) => {
     
   }
 }
-export const run_insert = async (sql, values) => {
+export const run_update = async (sql, values) => {
   try{
     const sequelize = new Sequelize(`postgres://${config.user}:${config.password}@${config.host}:${config.port}/${config.database}`);
     await sequelize.authenticate();
     let data = sequelize.query(sql, {
       replacements: values,
-      type: QueryTypes.INSERT
+      type: QueryTypes.UPDATE
     });
     await sequelize.close();
     return data
   }catch(err:any){
     console.error(err, sql, values);
-    throw 'Insert Data Error'
-    
+    throw 'Update Data Error'
   }
 }

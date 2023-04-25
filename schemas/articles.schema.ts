@@ -3,8 +3,8 @@ export const article= {
  "id": "/article",
  "title": "Article",
  "description": "An article in the blog",
- "type": "object",
- "properties": {
+ "type": "object", //mostly begin with object
+ "properties": { 
     "title": {
       "description": "Main title of the blog article",
       "type": "string"
