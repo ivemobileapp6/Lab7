@@ -5,6 +5,7 @@ export const getAll = async () => {
   let data = await db.run_query(query, null);
   return data;
 }
+ 
 
 
 
