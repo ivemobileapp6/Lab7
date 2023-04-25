@@ -6,6 +6,9 @@ export const getAll = async () => {
   return data;
 }
 
+
+
+
 export const getID = async (id: any) => {
   let query = 'select * from articles where ID = ?';
   let value = [id]
